@@ -38,7 +38,7 @@ queryGroup 'Transform File from fact_invoice_gold\Helper Queries'
 
 	annotation PBI_QueryGroupOrder = 0
 
-annotation PBI_QueryOrder = ["Account","Product","Time","Invoice","Sample File","Parameter1","Transform Sample File","Transform File","Sample File (2)","Parameter2","Transform Sample File (2)","Transform File (2)","Sample File (3)","Parameter3","Transform Sample File (3)","Transform File (3)","Sample File (4)","Parameter4","Transform Sample File (4)","Transform File (4)"]
+annotation PBI_QueryOrder = ["Account","Product","Time","Invoice","Sample File","Parameter1","Transform Sample File","Transform File","Sample File (2)","Parameter2","Transform Sample File (2)","Transform File (2)","Sample File (3)","Parameter3","Transform Sample File (3)","Transform File (3)","Sample File (4)","Parameter4","Transform Sample File (4)","Transform File (4)","CategoryTable"]
 
 annotation __PBI_TimeIntelligenceEnabled = 1
 
@@ -55,6 +55,7 @@ ref table LocalDateTable_a10572ca-4cf8-42f3-a74c-258bd86483b7
 ref table Invoice
 ref table InvoiceType
 ref table LocalDateTable_0921c17a-d84f-4bf2-a9cc-984dbc3bcd27
+ref table CategoryTable
 
 ref cultureInfo en-US
 
