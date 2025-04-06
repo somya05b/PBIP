@@ -1,0 +1,268 @@
+table Invoice
+	lineageTag: cabab52b-fa0c-4319-a50d-9cecf1ad5f16
+
+	measure 'Invoice Volume' = SUM('Invoice'[Quantity])
+		lineageTag: 2f92f4f4-d390-4e19-a93c-953623b20bef
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Gross Invoice Value' = SUM('Invoice'[GrossValue])
+		lineageTag: b3a95b43-07b3-46a7-bb39-10c0994cb0f0
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Net Invoice Value' = SUM('Invoice'[NetValue])
+		lineageTag: 49591fba-d236-45f1-8af3-1f04f7ea90d4
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'VAT Value' = SUM('Invoice'[VATValue])
+		lineageTag: cced0a2d-c1e4-4cf9-97b9-7a332af8f6a9
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Latest Month Invoice Volume' =
+			
+			CALCULATE(
+			    SUM('Invoice'[Quantity]),  -- Sums the Quantity from the 'Invoice' table
+			    FILTER(
+			        ALL('Invoice'),  -- Removes any filters from the 'Invoice' table to consider all invoices
+			        MONTH('Invoice'[Date]) = MONTH(MAX('Invoice'[Date])) &&  -- Filters to get the latest month from Invoice Date
+			        YEAR('Invoice'[Date]) = YEAR(MAX('Invoice'[Date]))  -- Filters to get the latest year from Invoice Date
+			    ),
+			    REMOVEFILTERS('Account'),  -- Removes any filter from 'Account'
+			    REMOVEFILTERS('Product'),  -- Removes any filter from 'Product'
+			    REMOVEFILTERS('Time')  -- Removes any filter from 'Time'
+			)
+		lineageTag: 2e9091c1-9d43-41f7-bd01-ea63268d7cdd
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Last Year Total Invoice Volume' = ```
+			
+			CALCULATE(
+			    [Invoice Volume], 
+			    SAMEPERIODLASTYEAR('Time'[Date]),
+			    ALL('Time')
+			)
+			```
+		lineageTag: aaaa04e0-3d4a-4b0b-bc40-89efaed63fd4
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Last Year YTD Invoice Volume' =
+			
+			CALCULATE([YTD Invoice Volume],SAMEPERIODLASTYEAR('Time'[Date]),ALL('Time')
+			)
+		lineageTag: b577f0b3-a598-4c35-a329-02c6ed39b4e0
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure '% of Last Year Total Invoice Volume' =
+			
+			DIVIDE([Last Year YTD Invoice Volume], [Last Year Total Invoice Volume], 0)
+		lineageTag: eea5ae85-1aa6-46a0-9671-9bfb51faae14
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Last Year YTD Net Invoice Value' =
+			
+			CALCULATE(
+			    [YTD Net Invoice Value],
+			    SAMEPERIODLASTYEAR('Time'[Date]),ALL('Time')
+			)
+		lineageTag: 3e4bf66f-aadf-4998-b2a6-c6c761cecaed
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'YTD Invoice Volume' =
+			
+			TOTALYTD(
+			    [Invoice Volume],
+			    'Time'[Date], ALL('Time')
+			)
+		lineageTag: 1a5eec0a-3413-4aa8-ba33-a16d68670b43
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'YTD Net Invoice Value' =
+			
+			TOTALYTD(
+			    [Net Invoice Value],
+			    'Time'[Date], ALL('Time')
+			)
+		lineageTag: aabc9e5d-d66c-4d2e-a553-ed2c6271db5b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'MAT Net Invoice Value' = ```
+			
+			CALCULATE(
+			    [Net Invoice Value],
+			    DATESBETWEEN(
+			        'Time'[Date],
+			        SELECTEDVALUE('Time'[Date]) - 364, 
+			        SELECTEDVALUE('Time'[Date])
+			    )
+			)
+			```
+		lineageTag: 8564e2b7-7fae-4ac1-b7ec-a3e72c6d2b2a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Latest Available Date' = CALCULATE(MAX('Invoice'[Date]),ALL())
+		formatString: General Date
+		lineageTag: 50e8e45a-3e49-45bc-9108-068b10ca5c66
+
+	measure 'Latest Month Net Invoice Value' = ```
+			
+			CALCULATE(
+			    SUM('Invoice'[NetValue]),  -- Sums the NetValue from the 'Invoice' table
+			    FILTER(
+			        ALL('Invoice'),  -- Removes filters from the 'Invoice' table (so all invoices are considered)
+			        'Invoice'[Date] = MAX('Invoice'[Date]) &&  -- Filters to get the latest date from Invoice
+			        MONTH('Invoice'[Date]) = MONTH(MAX('Invoice'[Date])) && 
+			        YEAR('Invoice'[Date]) = YEAR(MAX('Invoice'[Date]))  -- Filters for the latest month/year
+			    ),
+			    REMOVEFILTERS('Account'),  -- Removes any filter from 'Account'
+			    REMOVEFILTERS('Product'),  -- Removes any filter from 'Product'
+			    REMOVEFILTERS('Time')  -- Removes any filter from 'Time'
+			)
+			```
+		lineageTag: a7b02e3f-d69b-4975-a81b-17b4254f6d48
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure '% Change in YTD Invoice Volume' =
+			
+			DIVIDE(
+			    [YTD Invoice Volume] - [Last Year YTD Invoice Volume],
+			    [Last Year YTD Invoice Volume],0
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 070ee87d-14e5-4716-b802-0afa699c5e7a
+
+	measure 'Latest Month' = ```
+			
+			FORMAT(
+			    CALCULATE(MAX('Invoice'[Date]), ALL('Invoice')), 
+			    "MMMM YYYY"
+			)
+			```
+		lineageTag: 49b38053-26fe-43a7-b2e2-7fa69058eafe
+
+	column AccountSkey
+		dataType: int64
+		formatString: 0
+		lineageTag: 9e658066-d46e-4bb5-9145-114e10ac4924
+		summarizeBy: none
+		sourceColumn: AccountSkey
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductSkey
+		dataType: int64
+		formatString: 0
+		lineageTag: 807859b7-46c5-4e19-972e-24a246fd2973
+		summarizeBy: none
+		sourceColumn: ProductSkey
+
+		annotation SummarizationSetBy = Automatic
+
+	column TimeSkey
+		dataType: int64
+		formatString: 0
+		lineageTag: 6bfbc211-39c1-440f-8372-94fd5cd0bd09
+		summarizeBy: none
+		sourceColumn: TimeSkey
+
+		annotation SummarizationSetBy = Automatic
+
+	column InvoiceNumber
+		dataType: string
+		lineageTag: c47aaedf-6676-4622-b730-b2f792b5211e
+		summarizeBy: none
+		sourceColumn: InvoiceNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column InvoiceLineItemNumber
+		dataType: string
+		lineageTag: b7e1da27-9e25-41b3-9395-74ee2697cc2b
+		summarizeBy: none
+		sourceColumn: InvoiceLineItemNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quantity
+		dataType: double
+		formatString: 0
+		lineageTag: 41723efc-0d98-4c77-af6b-68b96ad8c08f
+		summarizeBy: sum
+		sourceColumn: Quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column GrossValue
+		dataType: double
+		lineageTag: 336cc8b0-1991-4bc1-94b0-29844a47fe4c
+		summarizeBy: sum
+		sourceColumn: GrossValue
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column NetValue
+		dataType: double
+		lineageTag: ac9ac270-197e-4828-951d-c5740889bbde
+		summarizeBy: sum
+		sourceColumn: NetValue
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column VATvalue
+		dataType: double
+		lineageTag: ca490d76-3ce4-480d-98ad-01f550965d60
+		summarizeBy: sum
+		sourceColumn: VATvalue
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Date = RELATED('Time'[Date])
+		formatString: General Date
+		lineageTag: c67dcb3c-26d8-468c-ae8d-b573a1829f89
+		summarizeBy: none
+
+		variation Variation
+			isDefault
+			relationship: 65a81470-514b-4a3e-b9c4-d89659872128
+			defaultHierarchy: LocalDateTable_0921c17a-d84f-4bf2-a9cc-984dbc3bcd27.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Invoice = m
+		mode: import
+		source =
+				let
+				    Source = AzureStorage.DataLake("https://tg00gidec24sombaadls.dfs.core.windows.net/tg00gidec24sombadfs/gold/"),
+				    #"Filtered Rows" = Table.SelectRows(Source, each ([Extension] = ".parquet") and ([Folder Path] = "https://tg00gidec24sombaadls.dfs.core.windows.net/tg00gidec24sombadfs/gold/Fact/Invoice/")),
+				    #"Filtered Hidden Files1" = Table.SelectRows(#"Filtered Rows", each [Attributes]?[Hidden]? <> true),
+				    #"Invoke Custom Function1" = Table.AddColumn(#"Filtered Hidden Files1", "Transform File (4)", each #"Transform File (4)"([Content])),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Invoke Custom Function1", {"Name", "Source.Name"}),
+				    #"Removed Other Columns1" = Table.SelectColumns(#"Renamed Columns1", {"Source.Name", "Transform File (4)"}),
+				    #"Expanded Table Column1" = Table.ExpandTableColumn(#"Removed Other Columns1", "Transform File (4)", Table.ColumnNames(#"Transform File (4)"(#"Sample File (4)"))),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Expanded Table Column1",{{"Source.Name", type text}, {"FactInvoiceSkey", Int64.Type}, {"AccountSkey", Int64.Type}, {"ProductSkey", Int64.Type}, {"TimeSkey", Int64.Type}, {"InvoiceNumber", Int64.Type}, {"InvoiceLineItemNumber", type text}, {"Quantity", Int64.Type}, {"GrossValue", type number}, {"NetValue", type number}, {"VATvalue", type number}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Source.Name", "FactInvoiceSkey"}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Removed Columns",{{"Quantity", type number}, {"InvoiceNumber", type text}})
+				in
+				    #"Changed Type1"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

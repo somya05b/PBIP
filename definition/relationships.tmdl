@@ -1,0 +1,27 @@
+relationship f9406446-9b59-4fe4-98bd-a7a8f223fce1
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Product.InsertedDateTime
+	toColumn: LocalDateTable_a3f0e934-2b68-4af9-9821-190a0fdf4d47.Date
+
+relationship 43a5b2e9-9222-49ad-a284-d2e57dcdd257
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Time.Date
+	toColumn: LocalDateTable_a10572ca-4cf8-42f3-a74c-258bd86483b7.Date
+
+relationship AutoDetected_a0a9810d-32f3-4077-9170-05ec2c4f94ee
+	fromColumn: Invoice.AccountSkey
+	toColumn: Account.AccountSkey
+
+relationship AutoDetected_bfe982ab-4967-4f8b-ac4a-664a5e7fa92e
+	fromColumn: Invoice.ProductSkey
+	toColumn: Product.ProductSkey
+
+relationship AutoDetected_c4ff1681-d98a-484a-b031-a41fb370de98
+	fromColumn: Invoice.TimeSkey
+	toColumn: Time.TimeSkey
+
+relationship 65a81470-514b-4a3e-b9c4-d89659872128
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Invoice.Date
+	toColumn: LocalDateTable_0921c17a-d84f-4bf2-a9cc-984dbc3bcd27.Date
+

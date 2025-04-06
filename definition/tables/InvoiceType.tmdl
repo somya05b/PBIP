@@ -1,0 +1,35 @@
+table InvoiceType
+	lineageTag: a09fcba9-8d35-49a8-bfc4-c51e2fb2d747
+
+	measure 'Selected Invoice Value' = ```
+			
+			SWITCH(
+			    SELECTEDVALUE(InvoiceType[InvoiceType], "Net Invoice Value"), 
+			    "Net Invoice Value", [Net Invoice Value],
+			    "Gross Invoice Value", [Gross Invoice Value]
+			)
+			```
+		lineageTag: a24f06fa-1481-4dca-b806-32ccd877250f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column InvoiceType
+		lineageTag: eb4228ae-8976-4741-b536-80583a2b0b3c
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [InvoiceType]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition InvoiceType = calculated
+		mode: import
+		source = ```
+				
+				DATATABLE("InvoiceType", STRING, { 
+				    {"Net Invoice Value"}, 
+				    {"Gross Invoice Value"} 
+				})
+				```
+
+	annotation PBI_Id = f03d83b1f65e43ec9ebd12ad29a24c00
+

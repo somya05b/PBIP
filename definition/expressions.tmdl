@@ -1,0 +1,176 @@
+expression 'Sample File' =
+		let
+		    Source = AzureStorage.DataLake("https://tg00gidec24sombaadls.dfs.core.windows.net/tg00gidec24sombadfs/gold/"),
+		    #"Filtered Rows" = Table.SelectRows(Source, each ([Extension] = ".parquet") and ([Folder Path] = "https://tg00gidec24sombaadls.dfs.core.windows.net/tg00gidec24sombadfs/gold/Dimension/Account/")),
+		    Navigation1 = #"Filtered Rows"{0}[Content]
+		in
+		    Navigation1
+	lineageTag: a1143f82-902e-4314-aa3a-82967bb6fffe
+	queryGroup: 'Transform File from account_gold\Helper Queries'
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Binary
+
+expression Parameter1 = #"Sample File" meta [IsParameterQuery=true, BinaryIdentifier=#"Sample File", Type="Binary", IsParameterQueryRequired=true]
+	lineageTag: 5179be15-da93-47d5-87b2-7b89bcbaaf62
+	queryGroup: 'Transform File from account_gold\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform Sample File' =
+		let
+		    Source = Parquet.Document(Parameter1, [Compression=null, LegacyColumnNameEncoding=false, MaxDepth=null])
+		in
+		    Source
+	lineageTag: 8337b443-53b1-4346-888e-a7bd2166066e
+	queryGroup: 'Transform File from account_gold'
+
+	annotation PBI_ResultType = Table
+
+expression 'Transform File' =
+		let
+		    Source = (Parameter1 as binary) => let
+		    Source = Parquet.Document(Parameter1, [Compression=null, LegacyColumnNameEncoding=false, MaxDepth=null])
+		in
+		    Source
+		in
+		    Source
+	mAttributes: [ FunctionQueryBinding = "{""exemplarFormulaName"":""Transform Sample File""}" ]
+	lineageTag: 117b8014-fea9-4528-b954-bed6f9e8cb6e
+	queryGroup: 'Transform File from account_gold\Helper Queries'
+
+	annotation PBI_ResultType = Function
+
+expression 'Sample File (2)' =
+		let
+		    Source = AzureStorage.DataLake("https://tg00gidec24sombaadls.dfs.core.windows.net/tg00gidec24sombadfs/gold/"),
+		    #"Filtered Rows" = Table.SelectRows(Source, each ([Extension] = ".parquet") and ([Folder Path] = "https://tg00gidec24sombaadls.dfs.core.windows.net/tg00gidec24sombadfs/gold/Dimension/Product/")),
+		    Navigation1 = #"Filtered Rows"{0}[Content]
+		in
+		    Navigation1
+	lineageTag: 95e3f17b-7740-4724-8d3c-0c97b5689fee
+	queryGroup: 'Transform File from product_gold\Helper Queries'
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Binary
+
+expression Parameter2 = #"Sample File (2)" meta [IsParameterQuery=true, BinaryIdentifier=#"Sample File (2)", Type="Binary", IsParameterQueryRequired=true]
+	lineageTag: a9b3f771-e083-4c1d-a76e-b9af8ecdea1c
+	queryGroup: 'Transform File from product_gold\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform Sample File (2)' =
+		let
+		    Source = Parquet.Document(Parameter2, [Compression=null, LegacyColumnNameEncoding=false, MaxDepth=null])
+		in
+		    Source
+	lineageTag: bf15fe93-1bbe-43c7-a00c-2c24ad7398dc
+	queryGroup: 'Transform File from product_gold'
+
+	annotation PBI_ResultType = Table
+
+expression 'Transform File (2)' =
+		let
+		    Source = (Parameter2 as binary) => let
+		    Source = Parquet.Document(Parameter2, [Compression=null, LegacyColumnNameEncoding=false, MaxDepth=null])
+		in
+		    Source
+		in
+		    Source
+	mAttributes: [ FunctionQueryBinding = "{""exemplarFormulaName"":""Transform Sample File (2)""}" ]
+	lineageTag: 18dac0a0-eb8c-4a9b-9f8a-8968621895db
+	queryGroup: 'Transform File from product_gold\Helper Queries'
+
+	annotation PBI_ResultType = Function
+
+expression 'Sample File (3)' =
+		let
+		    Source = AzureStorage.DataLake("https://tg00gidec24sombaadls.dfs.core.windows.net/tg00gidec24sombadfs/gold/"),
+		    #"Filtered Rows" = Table.SelectRows(Source, each ([Extension] = ".parquet") and ([Folder Path] = "https://tg00gidec24sombaadls.dfs.core.windows.net/tg00gidec24sombadfs/gold/Dimension/Time/")),
+		    Navigation1 = #"Filtered Rows"{0}[Content]
+		in
+		    Navigation1
+	lineageTag: b838f66a-1b10-478d-951c-b3500aeeb318
+	queryGroup: 'Transform File from time_gold\Helper Queries'
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Binary
+
+expression Parameter3 = #"Sample File (3)" meta [IsParameterQuery=true, BinaryIdentifier=#"Sample File (3)", Type="Binary", IsParameterQueryRequired=true]
+	lineageTag: 756d2feb-edef-4f1b-a386-a6fbdbc3af98
+	queryGroup: 'Transform File from time_gold\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform Sample File (3)' =
+		let
+		    Source = Parquet.Document(Parameter3, [Compression=null, LegacyColumnNameEncoding=false, MaxDepth=null])
+		in
+		    Source
+	lineageTag: 5b1af166-7192-4a24-8583-1d5f4efc2326
+	queryGroup: 'Transform File from time_gold'
+
+	annotation PBI_ResultType = Table
+
+expression 'Transform File (3)' =
+		let
+		    Source = (Parameter3 as binary) => let
+		    Source = Parquet.Document(Parameter3, [Compression=null, LegacyColumnNameEncoding=false, MaxDepth=null])
+		in
+		    Source
+		in
+		    Source
+	mAttributes: [ FunctionQueryBinding = "{""exemplarFormulaName"":""Transform Sample File (3)""}" ]
+	lineageTag: 4f4c4568-d582-4181-90f2-74b0db757954
+	queryGroup: 'Transform File from time_gold\Helper Queries'
+
+	annotation PBI_ResultType = Function
+
+expression 'Sample File (4)' =
+		let
+		    Source = AzureStorage.DataLake("https://tg00gidec24sombaadls.dfs.core.windows.net/tg00gidec24sombadfs/gold/"),
+		    #"Filtered Rows" = Table.SelectRows(Source, each ([Extension] = ".parquet") and ([Folder Path] = "https://tg00gidec24sombaadls.dfs.core.windows.net/tg00gidec24sombadfs/gold/Fact/Invoice/")),
+		    Navigation1 = #"Filtered Rows"{0}[Content]
+		in
+		    Navigation1
+	lineageTag: 7f90fed7-1081-4561-8c79-85b2131b94e9
+	queryGroup: 'Transform File from fact_invoice_gold\Helper Queries'
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Binary
+
+expression Parameter4 = #"Sample File (4)" meta [IsParameterQuery=true, BinaryIdentifier=#"Sample File (4)", Type="Binary", IsParameterQueryRequired=true]
+	lineageTag: 06157509-1969-4702-bd36-8878cb31ab56
+	queryGroup: 'Transform File from fact_invoice_gold\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform Sample File (4)' =
+		let
+		    Source = Parquet.Document(Parameter4, [Compression=null, LegacyColumnNameEncoding=false, MaxDepth=null])
+		in
+		    Source
+	lineageTag: 0cf8878f-d2be-4a54-a924-918ac47fb82a
+	queryGroup: 'Transform File from fact_invoice_gold'
+
+	annotation PBI_ResultType = Table
+
+expression 'Transform File (4)' =
+		let
+		    Source = (Parameter4 as binary) => let
+		    Source = Parquet.Document(Parameter4, [Compression=null, LegacyColumnNameEncoding=false, MaxDepth=null])
+		in
+		    Source
+		in
+		    Source
+	mAttributes: [ FunctionQueryBinding = "{""exemplarFormulaName"":""Transform Sample File (4)""}" ]
+	lineageTag: 7ee8163c-4a7a-4be2-b9f2-7093b96e5630
+	queryGroup: 'Transform File from fact_invoice_gold\Helper Queries'
+
+	annotation PBI_ResultType = Function
+

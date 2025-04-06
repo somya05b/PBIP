@@ -1,0 +1,110 @@
+table Time
+	lineageTag: f5a6a811-ef3a-4c59-aab5-ee3dd8c36a21
+
+	column TimeSkey
+		dataType: int64
+		formatString: 0
+		lineageTag: 459735a3-b142-403d-bd56-9ad0e4ab36ad
+		summarizeBy: none
+		sourceColumn: TimeSkey
+
+		annotation SummarizationSetBy = Automatic
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 084c079f-8388-4c2d-be5c-c7434fd178ce
+		summarizeBy: none
+		sourceColumn: Date
+
+		variation Variation
+			isDefault
+			relationship: 43a5b2e9-9222-49ad-a284-d2e57dcdd257
+			defaultHierarchy: LocalDateTable_a10572ca-4cf8-42f3-a74c-258bd86483b7.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column DayOfWeek
+		dataType: string
+		lineageTag: cdf3b012-44fe-442a-8a3a-f48e6e35c186
+		summarizeBy: none
+		sourceColumn: DayOfWeek
+
+		annotation SummarizationSetBy = Automatic
+
+	column CurrentDay
+		dataType: int64
+		formatString: 0
+		lineageTag: 534a2e88-dfe0-4e5d-b375-41279f817a7f
+		summarizeBy: sum
+		sourceColumn: CurrentDay
+
+		annotation SummarizationSetBy = Automatic
+
+	column WorkingDay
+		dataType: int64
+		formatString: 0
+		lineageTag: be6fbe29-d170-4111-ad5b-291723419262
+		summarizeBy: sum
+		sourceColumn: WorkingDay
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 5586dba3-e50b-4bb0-b394-3220deb85830
+		summarizeBy: sum
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month
+		dataType: string
+		lineageTag: 77697de9-1933-4d8d-ba02-6d069e6cd087
+		summarizeBy: none
+		sourceColumn: Month
+		sortByColumn: 'Month Number'
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter
+		dataType: string
+		lineageTag: 6362be0f-ec4d-47f7-a9d9-e6e27f886af4
+		summarizeBy: none
+		sourceColumn: Quarter
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Number' = MONTH('Time'[Date])
+		formatString: 0
+		lineageTag: 239f1fa0-90b0-4f83-87be-90cb896bf45e
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Time = m
+		mode: import
+		source =
+				let
+				    Source = AzureStorage.DataLake("https://tg00gidec24sombaadls.dfs.core.windows.net/tg00gidec24sombadfs/gold/"),
+				    #"Filtered Rows" = Table.SelectRows(Source, each ([Extension] = ".parquet") and ([Folder Path] = "https://tg00gidec24sombaadls.dfs.core.windows.net/tg00gidec24sombadfs/gold/Dimension/Time/")),
+				    #"Filtered Hidden Files1" = Table.SelectRows(#"Filtered Rows", each [Attributes]?[Hidden]? <> true),
+				    #"Invoke Custom Function1" = Table.AddColumn(#"Filtered Hidden Files1", "Transform File (3)", each #"Transform File (3)"([Content])),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Invoke Custom Function1", {"Name", "Source.Name"}),
+				    #"Removed Other Columns1" = Table.SelectColumns(#"Renamed Columns1", {"Source.Name", "Transform File (3)"}),
+				    #"Expanded Table Column1" = Table.ExpandTableColumn(#"Removed Other Columns1", "Transform File (3)", Table.ColumnNames(#"Transform File (3)"(#"Sample File (3)"))),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Expanded Table Column1",{{"Source.Name", type text}, {"TimeSkey", Int64.Type}, {"Date", type date}, {"DayOfWeek", type text}, {"CurrentDay", Int64.Type}, {"WorkingDay", Int64.Type}, {"MonthId", Int64.Type}, {"MonthDesc", type text}, {"QuarterId", Int64.Type}, {"QuarterDesc", type text}, {"Year", Int64.Type}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Source.Name"}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Removed Columns",{{"Date", type datetime}}),
+				    #"Removed Columns1" = Table.RemoveColumns(#"Changed Type1",{"MonthId", "QuarterId"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Removed Columns1",{{"MonthDesc", "Month"}, {"QuarterDesc", "Quarter"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

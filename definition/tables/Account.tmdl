@@ -1,0 +1,77 @@
+table Account
+	lineageTag: a4cfbedd-8378-4c94-a2ee-dcc87a703fc1
+
+	column AccountSkey
+		dataType: int64
+		formatString: 0
+		lineageTag: da400ac6-e43a-4b94-b4c9-1bbf9234a90a
+		summarizeBy: none
+		sourceColumn: AccountSkey
+
+		annotation SummarizationSetBy = Automatic
+
+	column SourceSystemId
+		dataType: string
+		lineageTag: 37ee6e27-f951-488f-968b-8adec2da4298
+		summarizeBy: none
+		sourceColumn: SourceSystemId
+
+		annotation SummarizationSetBy = Automatic
+
+	column Account
+		dataType: string
+		lineageTag: acc67122-243a-42a7-87cb-1b4d566aa50e
+		summarizeBy: none
+		sourceColumn: Account
+
+		annotation SummarizationSetBy = Automatic
+
+	column AccountGroup
+		dataType: string
+		lineageTag: b68f03a5-341c-49df-b42c-f1f79eda764d
+		summarizeBy: none
+		sourceColumn: AccountGroup
+
+		annotation SummarizationSetBy = Automatic
+
+	column AccountStatus
+		dataType: int64
+		formatString: 0
+		lineageTag: 7e6d700d-abb7-4dc2-bb48-6b9a859bea12
+		summarizeBy: sum
+		sourceColumn: AccountStatus
+
+		annotation SummarizationSetBy = Automatic
+
+	hierarchy 'AccountGroup Hierarchy'
+		lineageTag: 62c55d28-0ac2-487f-84f4-f0c5d39cfa2d
+
+		level AccountGroup
+			lineageTag: b52631f7-f4e0-40a3-aeb0-f5528c16075d
+			column: AccountGroup
+
+		level Account
+			lineageTag: 6e24ff6e-76ce-43d0-8a49-531428c55698
+			column: Account
+
+	partition Account = m
+		mode: import
+		source =
+				let
+				    Source = AzureStorage.DataLake("https://tg00gidec24sombaadls.dfs.core.windows.net/tg00gidec24sombadfs/gold/"),
+				    #"Filtered Rows" = Table.SelectRows(Source, each ([Extension] = ".parquet") and ([Folder Path] = "https://tg00gidec24sombaadls.dfs.core.windows.net/tg00gidec24sombadfs/gold/Dimension/Account/")),
+				    #"Filtered Hidden Files1" = Table.SelectRows(#"Filtered Rows", each [Attributes]?[Hidden]? <> true),
+				    #"Invoke Custom Function1" = Table.AddColumn(#"Filtered Hidden Files1", "Transform File", each #"Transform File"([Content])),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Invoke Custom Function1", {"Name", "Source.Name"}),
+				    #"Removed Other Columns1" = Table.SelectColumns(#"Renamed Columns1", {"Source.Name", "Transform File"}),
+				    #"Expanded Table Column1" = Table.ExpandTableColumn(#"Removed Other Columns1", "Transform File", Table.ColumnNames(#"Transform File"(#"Sample File"))),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Expanded Table Column1",{{"Source.Name", type text}, {"AccountSkey", Int64.Type}, {"SourceSystemId", type text}, {"AccountNo", type text}, {"AccountDesc", type text}, {"PrimaryGroupNo", type text}, {"PrimaryGroupDesc", type text}, {"Account", type text}, {"AccountGroup", type text}, {"DateOpened", type datetime}, {"DateClosed", type any}, {"AccountStatus", Int64.Type}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Source.Name", "AccountNo", "AccountDesc", "PrimaryGroupNo", "PrimaryGroupDesc", "DateOpened", "DateClosed"}),
+				    #"Reordered Columns" = Table.ReorderColumns(#"Removed Columns",{"AccountSkey", "SourceSystemId", "Account", "AccountStatus", "AccountGroup"})
+				in
+				    #"Reordered Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

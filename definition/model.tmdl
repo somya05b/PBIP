@@ -1,0 +1,60 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+queryGroup 'Transform File from account_gold'
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'Transform File from account_gold\Helper Queries'
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'Transform File from product_gold'
+
+	annotation PBI_QueryGroupOrder = 2
+
+queryGroup 'Transform File from product_gold\Helper Queries'
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'Transform File from time_gold'
+
+	annotation PBI_QueryGroupOrder = 4
+
+queryGroup 'Transform File from time_gold\Helper Queries'
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'Transform File from fact_invoice_gold'
+
+	annotation PBI_QueryGroupOrder = 6
+
+queryGroup 'Transform File from fact_invoice_gold\Helper Queries'
+
+	annotation PBI_QueryGroupOrder = 0
+
+annotation PBI_QueryOrder = ["Account","Product","Time","Invoice","Sample File","Parameter1","Transform Sample File","Transform File","Sample File (2)","Parameter2","Transform Sample File (2)","Transform File (2)","Sample File (3)","Parameter3","Transform Sample File (3)","Transform File (3)","Sample File (4)","Parameter4","Transform Sample File (4)","Transform File (4)"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBIDesktopVersion = 2.141.1253.0 (25.03)+74f9999a1e95f78c739f3ea2b96ba340e9ba8729
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table Account
+ref table DateTableTemplate_c2703825-3a01-4a87-aa0e-e25bd365461d
+ref table Product
+ref table LocalDateTable_a3f0e934-2b68-4af9-9821-190a0fdf4d47
+ref table Time
+ref table LocalDateTable_a10572ca-4cf8-42f3-a74c-258bd86483b7
+ref table Invoice
+ref table InvoiceType
+ref table LocalDateTable_0921c17a-d84f-4bf2-a9cc-984dbc3bcd27
+
+ref cultureInfo en-US
+

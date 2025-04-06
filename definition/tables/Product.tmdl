@@ -1,0 +1,207 @@
+table Product
+	lineageTag: a27da738-b798-4591-a19b-f3a24037589e
+
+	column ProductSkey
+		dataType: int64
+		formatString: 0
+		lineageTag: c89ca8fa-13a9-4f24-bc95-32f1aeaff87a
+		summarizeBy: none
+		sourceColumn: ProductSkey
+
+		annotation SummarizationSetBy = Automatic
+
+	column SourceSystemSKUId
+		dataType: string
+		lineageTag: d3b09bfe-cb2e-4023-801e-3b6050ac3372
+		summarizeBy: none
+		sourceColumn: SourceSystemSKUId
+
+		annotation SummarizationSetBy = Automatic
+
+	column SkuCode
+		dataType: int64
+		formatString: 0
+		lineageTag: 29db0684-367d-46a5-b6f1-baa29a2b312c
+		summarizeBy: count
+		sourceColumn: SkuCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column SKU
+		dataType: string
+		lineageTag: 7d61e89f-a308-4bca-9e2c-771674565467
+		summarizeBy: none
+		sourceColumn: SKU
+
+		annotation SummarizationSetBy = Automatic
+
+	column PackingCode
+		dataType: int64
+		formatString: 0
+		lineageTag: 831fbd59-3026-4242-a7a5-e9f36ff4f0a4
+		summarizeBy: count
+		sourceColumn: PackingCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column Packing
+		dataType: string
+		lineageTag: 1224ef81-da56-4bd0-bd4c-edf967b859ea
+		summarizeBy: none
+		sourceColumn: Packing
+
+		annotation SummarizationSetBy = Automatic
+
+	column BrandCode
+		dataType: int64
+		formatString: 0
+		lineageTag: aeb20ff7-adba-4130-b17a-4ed56a5c198d
+		summarizeBy: count
+		sourceColumn: BrandCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column Brand
+		dataType: string
+		lineageTag: ef19fd7d-4beb-464a-9a7d-fbbea8bd2cc5
+		summarizeBy: none
+		sourceColumn: Brand
+
+		annotation SummarizationSetBy = Automatic
+
+	column HouseCode
+		dataType: int64
+		formatString: 0
+		lineageTag: 0558627f-a279-4160-b6c2-863efe49c29b
+		summarizeBy: count
+		sourceColumn: HouseCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column House
+		dataType: string
+		lineageTag: 3e1bab6a-3291-4072-8c78-2b035adc1f14
+		summarizeBy: none
+		sourceColumn: House
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductGroupCode
+		dataType: int64
+		formatString: 0
+		lineageTag: d2be180c-56c0-42d9-8180-f9d485e2d16a
+		summarizeBy: count
+		sourceColumn: ProductGroupCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductGroup
+		dataType: string
+		lineageTag: 92fd8662-744f-4216-ba92-92b553036607
+		summarizeBy: none
+		sourceColumn: ProductGroup
+
+		annotation SummarizationSetBy = Automatic
+
+	column TradedUnit
+		dataType: string
+		lineageTag: 1a86f6c3-8b8d-472e-80d1-6244cacb2113
+		summarizeBy: none
+		sourceColumn: TradedUnit
+
+		annotation SummarizationSetBy = Automatic
+
+	column OutersPerTradedUnit
+		dataType: int64
+		formatString: 0
+		lineageTag: 3cc4c378-d310-4013-9419-9474db88140a
+		summarizeBy: sum
+		sourceColumn: OutersPerTradedUnit
+
+		annotation SummarizationSetBy = Automatic
+
+	column PacksPerTradedUnit
+		dataType: int64
+		formatString: 0
+		lineageTag: a423f178-6f61-45c0-8be3-2a7e0d49cde4
+		summarizeBy: sum
+		sourceColumn: PacksPerTradedUnit
+
+		annotation SummarizationSetBy = Automatic
+
+	column SticksPerTradedUnit
+		dataType: int64
+		formatString: 0
+		lineageTag: d20e0997-55d3-490d-8bc0-68a5d1d5ab60
+		summarizeBy: sum
+		sourceColumn: SticksPerTradedUnit
+
+		annotation SummarizationSetBy = Automatic
+
+	column GramsPerTradedUnit
+		dataType: double
+		formatString: 0
+		lineageTag: b4fadaab-8360-4029-88a4-b816bec8c6f0
+		summarizeBy: sum
+		sourceColumn: GramsPerTradedUnit
+
+		annotation SummarizationSetBy = Automatic
+
+	column InsertedDateTime
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 3c00aeeb-8b24-49df-8005-9f614b7ba05f
+		summarizeBy: none
+		sourceColumn: InsertedDateTime
+
+		variation Variation
+			isDefault
+			relationship: f9406446-9b59-4fe4-98bd-a7a8f223fce1
+			defaultHierarchy: LocalDateTable_a3f0e934-2b68-4af9-9821-190a0fdf4d47.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	hierarchy 'ProductGroup Hierarchy'
+		lineageTag: 7aede2f5-60f9-47bd-b3cf-ef4522ddf619
+
+		level ProductGroup
+			lineageTag: 22018612-2713-4605-b868-ad3c37761519
+			column: ProductGroup
+
+		level House
+			lineageTag: 5985f2f4-c736-40af-940f-05f4eb3a95ed
+			column: House
+
+		level Brand
+			lineageTag: 0b9363fb-a26b-4643-b2cf-c954927eb80e
+			column: Brand
+
+		level Packing
+			lineageTag: 01f0384d-3a38-48fe-932b-129abee6109e
+			column: Packing
+
+		level SKU
+			lineageTag: df368796-562b-41da-a30f-b5377c5bd1cc
+			column: SKU
+
+	partition Product = m
+		mode: import
+		source =
+				let
+				    Source = AzureStorage.DataLake("https://tg00gidec24sombaadls.dfs.core.windows.net/tg00gidec24sombadfs/gold/"),
+				    #"Filtered Rows" = Table.SelectRows(Source, each ([Extension] = ".parquet") and ([Folder Path] = "https://tg00gidec24sombaadls.dfs.core.windows.net/tg00gidec24sombadfs/gold/Dimension/Product/")),
+				    #"Filtered Hidden Files1" = Table.SelectRows(#"Filtered Rows", each [Attributes]?[Hidden]? <> true),
+				    #"Invoke Custom Function1" = Table.AddColumn(#"Filtered Hidden Files1", "Transform File (2)", each #"Transform File (2)"([Content])),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Invoke Custom Function1", {"Name", "Source.Name"}),
+				    #"Removed Other Columns1" = Table.SelectColumns(#"Renamed Columns1", {"Source.Name", "Transform File (2)"}),
+				    #"Expanded Table Column1" = Table.ExpandTableColumn(#"Removed Other Columns1", "Transform File (2)", Table.ColumnNames(#"Transform File (2)"(#"Sample File (2)"))),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Expanded Table Column1",{{"Source.Name", type text}, {"ProductSkey", Int64.Type}, {"SourceSystemSKUId", type text}, {"SkuCode", Int64.Type}, {"SKU", type text}, {"PackingCode", Int64.Type}, {"Packing", type text}, {"BrandCode", Int64.Type}, {"Brand", type text}, {"HouseCode", Int64.Type}, {"House", type text}, {"ProductGroupCode", Int64.Type}, {"ProductGroup", type text}, {"TradedUnit", type text}, {"OutersPerTradedUnit", Int64.Type}, {"PacksPerTradedUnit", Int64.Type}, {"SticksPerTradedUnit", Int64.Type}, {"GramsPerTradedUnit", Int64.Type}, {"InsertedDateTime", type datetime}, {"ModifiedDateTime", type any}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Source.Name", "ModifiedDateTime"}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Removed Columns",{{"GramsPerTradedUnit", type number}})
+				in
+				    #"Changed Type1"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
